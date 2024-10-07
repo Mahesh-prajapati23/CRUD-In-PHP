@@ -4,8 +4,8 @@ $insert = false;
 // connecting to database
 $servername = "localhost";
 $username = "root";
-$password = "";
-$database = ""; 
+$password = "Mysql@123,";
+$database = "notes";
 
 
 // Create a connection object
@@ -52,19 +52,37 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   crossorigin="anonymous">></script>
   <script src="//cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
   
+  
   </head>
   <body>
 
-  <!-- Edit modal -->
-  <div class="modal" tabindex="-1">
+  <!-- edit  modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+  Edit modal
+</button> -->
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h1 class="modal-title fs-5" id="editModalLabel">Edit this note!</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
+      <form action="/CRUD/index.php" method="POST">
+            <div class="mb-3">
+              <label for="exampleInputEmail1Edit" class="form-label">Note title</label>
+              <input type="text" class="form-control" name="titleEdit" id="exampleInputEmail1Edit" placeholder="Enter your note title here!" aria-describedby="emailHelp">
+              
+            </div>
+            <div class="mb-3">
+                    <label for="floatingTextareaEdit" class="form-label">Note description</label>
+                    <textarea class="form-control" name="descriptionEdit" placeholder="Enter some description about your note here!" id="floatingTextareaEdit"></textarea>   
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add Note</button>
+          </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -151,12 +169,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                  <th >".$sno."</th>
                  <td>".$row['title']."</td>
                  <td>".$row['description']."</td>
-                 <td><a href='/edit'>Edit</a>  <a href='/delete'>Delete</a>
+                 <td>  <button class='edit btn btn-sm btn-primary'>Edit</button> <a href='/delete'>Delete</a>
           </td>
                 </tr>";
                 
         }
          ?>
+
+        
     
    
   </tbody>
@@ -167,5 +187,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     <script>
       let table = new DataTable('#myTable');
     </script>
+    <script>
+    edits = document.getElementsByClassName('edit')
+    Array.from(edits).forEach((element)=>{
+      element.addEventListener("click",(e)=>{
+        console.log("edit",);
+        tr=e.target.parentNode.parentNode
+        title = tr.getElementsByTagName("td")[0].innerText
+        description = tr.getElementsByTagName("td")[1].innerText
+        console.log(title,description)
+        titleEdit.value = title
+        descriptionEdit.value = description
+        $('#editModal').modal('toggle')
+      })
+    })
+    // const myModalAlternative = new bootstrap.Modal('#editModal', options)
+    
+  </script>
   </body>
 </html>
