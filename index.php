@@ -5,7 +5,7 @@ $insert = false;
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "";
+$database = ""; 
 
 
 // Create a connection object
