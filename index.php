@@ -17,10 +17,24 @@ if(!$conn){
     echo ("Sorry we failed to connect database(mySql) :". mysqli_connect_error());
 }
 
+// echo $_GET['update'];
+// echo $_POST['snoEdit'];
+// exit();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-  $title = $_POST["title"];
-  $description = $_POST["description"];
+  if(isset($_POST['snoEdit'])){
+    // update the record
+    $sno =$_POST['snoEdit'];
+    $title = $_POST["titleEdit"];
+    $description = $_POST["descriptionEdit"];
+
+  // sql query to be execute
+  $sql = "UPDATE `note` SET `title` = '$title' AND `description` = '$description' WHERE `note`.`sno`=$sno";
+  $result = mySqli_query($conn,$sql);
+  }
+  else{
+    $title = $_POST["title"];
+    $description = $_POST["description"];
 
   // sql query to be execute
   $sql = "INSERT INTO `note` (`title`, `description`) VALUES ('$title','$description')";
@@ -34,6 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   else{
     echo "Record was not inserted successsfully! bcz for this error -->".mysqli_error($conn);
   }
+}
 }
 ?>
 
@@ -70,18 +85,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <input type="hidden" name="snoEdit" id="snoEdit">
       <form action="/CRUD/index.php" method="POST">
             <div class="mb-3">
-              <label for="exampleInputEmail1Edit" class="form-label">Note title</label>
-              <input type="text" class="form-control" name="titleEdit" id="exampleInputEmail1Edit" placeholder="Enter your note title here!" aria-describedby="emailHelp">
+              <label for="titleEdit" class="form-label">Note title</label>
+              <input type="text" class="form-control" name="titleEdit" id="titleEdit" placeholder="Enter your note title here!" aria-describedby="emailHelp">
               
             </div>
             <div class="mb-3">
                     <label for="floatingTextareaEdit" class="form-label">Note description</label>
-                    <textarea class="form-control" name="descriptionEdit" placeholder="Enter some description about your note here!" id="floatingTextareaEdit"></textarea>   
+                    <textarea class="form-control" name="descriptionEdit" placeholder="Enter some description about your note here!" id="descriptionEdit"></textarea>   
             </div>
             
-            <button type="submit" class="btn btn-primary">Add Note</button>
+            <button type="submit" class="btn btn-primary">Update Note</button>
           </form>
       </div>
       <div class="modal-footer">
@@ -169,7 +185,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                  <th >".$sno."</th>
                  <td>".$row['title']."</td>
                  <td>".$row['description']."</td>
-                 <td>  <button class='edit btn btn-sm btn-primary'>Edit</button> <a href='/delete'>Delete</a>
+                 <td>  <button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <a href='/delete'>Delete</a>
           </td>
                 </tr>";
                 
@@ -198,11 +214,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         console.log(title,description)
         titleEdit.value = title
         descriptionEdit.value = description
-        $('#editModal').modal('toggle')
+        snoEdit.value = e.target.id
+        console.log(e.target.id)
+        $('#editModal').modal('show');
       })
     })
     // const myModalAlternative = new bootstrap.Modal('#editModal', options)
     
+
   </script>
   </body>
 </html>
